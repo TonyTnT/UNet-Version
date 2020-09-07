@@ -2,8 +2,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers import unetConv2
-from init_weights import init_weights
+from .layers import unetConv2
+from .init_weights import init_weights
+import numpy as np
 '''
     UNet 3+
 '''
@@ -780,4 +781,5 @@ class UNet_3Plus_DeepSup_CGM(nn.Module):
         d4 = self.dotProduct(d4, cls_branch_max)
         d5 = self.dotProduct(d5, cls_branch_max)
 
-        return F.sigmoid(d1), F.sigmoid(d2), F.sigmoid(d3), F.sigmoid(d4), F.sigmoid(d5)
+        final = (d1+d2+d3+d4+d5) / 5
+        return F.sigmoid(final)

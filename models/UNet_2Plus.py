@@ -2,10 +2,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layers import unetConv2, unetUp_origin
-from init_weights import init_weights
+from .layers import unetConv2, unetUp_origin
+from .init_weights import init_weights
 import numpy as np
 from torchvision import models
+
+
+
 class UNet_2Plus(nn.Module):
 
     def __init__(self, in_channels=3, n_classes=1, feature_scale=4, is_deconv=True, is_batchnorm=True, is_ds=True):
@@ -100,10 +103,11 @@ class UNet_2Plus(nn.Module):
         else:
             return F.sigmoid(final_4)
 
-model = UNet_2Plus()
-print('# generator parameters:', 1.0 * sum(param.numel() for param in model.parameters())/1000000)
-params = list(model.named_parameters())
-for i in range(len(params)):
-    (name, param) = params[i]
-    print(name)
-    print(param.shape)
+
+# model = UNet_2Plus()
+# print('# generator parameters:', 1.0 * sum(param.numel() for param in model.parameters())/1000000)
+# params = list(model.named_parameters())
+# for i in range(len(params)):
+#     (name, param) = params[i]
+#     print(name)
+#     print(param.shape)
