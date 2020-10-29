@@ -2,12 +2,15 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .layers import unetConv2, unetUp, unetUp_origin
+
 from .init_weights import init_weights
-from torchvision import models
-import numpy as np
+from .layers import unetConv2, unetUp
+
 
 class UNet(nn.Module):
+    """
+    from https://github.com/ZJUGiveLab/UNet-Version
+    """
 
     def __init__(self, in_channels=3, n_classes=1, feature_scale=4, is_deconv=True, is_batchnorm=True):
         super(UNet, self).__init__()
@@ -15,10 +18,8 @@ class UNet(nn.Module):
         self.in_channels = in_channels
         self.is_batchnorm = is_batchnorm
         self.feature_scale = feature_scale
-        #
-        # filters = [32, 64, 128, 256, 512]
+
         filters = [64, 128, 256, 512, 1024]
-        # # filters = [int(x / self.feature_scale) for x in filters]
 
         # downsampling
         self.conv1 = unetConv2(self.in_channels, filters[0], self.is_batchnorm)
@@ -50,7 +51,7 @@ class UNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 init_weights(m, init_type='kaiming')
 
-    def dotProduct(self,seg,cls):
+    def dotProduct(self, seg, cls):
         B, N, H, W = seg.size()
         seg = seg.view(B, N, H * W)
         final = torch.einsum("ijk,ij->ijk", [seg, cls])
