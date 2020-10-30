@@ -1,4 +1,3 @@
-from datetime import datetime
 import os
 import random
 import time
@@ -188,7 +187,7 @@ trans = seg_transforms(phase='train', resize=(img_size, img_size))
 
 # random seed setting
 seed = int(time.time())
-# seed_torch(seed)
+seed_torch(seed)
 
 # data loading
 dataset = ImgSeg(jpg_path, seg_path, transform=trans)
